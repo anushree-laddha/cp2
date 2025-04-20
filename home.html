@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameOn - Home</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="https://img.icons8.com/color/48/000000/controller.png">
+    <style>
+        :root {
+            --primary: #FF6B6B; /* Vibrant coral */
+            --secondary: #4ECDC4; /* Bright teal */
+            --accent: #FFE66D; /* Sunny yellow */
+            --dark: #292F36; /* Dark slate */
+            --light: #F7FFF7; /* Mint cream */
+            --text: #292F36;
+            --text-light: #6C757D;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        body {
+            background-color: var(--light);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Header with fun gradient */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 15px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+            transition: var(--transition);
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .logo span {
+            margin-left: 10px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        nav ul li a {
+            color: white;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 30px;
+            transition: var(--transition);
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        nav ul li a.active {
+            background-color: var(--accent);
+            color: var(--dark);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul li a i {
+            margin-right: 8px;
+        }
+
+        /* Hero section with animated background */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+            padding: 80px 0;
+            border-radius: 20px;
+            margin: 40px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 3px dashed rgba(255, 230, 109, 0.3);
+            box-shadow: var(--shadow);
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 230, 109, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hero-section h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            text-shadow: 3px 3px 0 var(--accent);
+            letter-spacing: 1px;
+        }
+
+        .hero-section p {
+            font-size: 1.5rem;
+            color: var(--text);
+            max-width: 800px;
+            margin: 0 auto 40px;
+            font-weight: 500;
+        }
+
+        /* Game slider section */
+        .game-slider {
+            width: 100%;
+            overflow: hidden;
+            margin: 50px 0;
+            position: relative;
+        }
+
+        .slider-container {
+            display: flex;
+            transition: transform 4s ease;
+            padding: 20px 0;
+        }
+
+        .slider-item {
+            min-width: 300px;
+            margin: 0 15px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .slider-item:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slider-content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .slider-content h3 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .slider-content p {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+            z-index: 10;
+        }
+
+        .slider-btn {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            border: none;
+        }
+
+        .slider-btn:hover {
+            background: var(--secondary);
+            transform: scale(1.1);
+        }
+
+        /* Games grid with fun hover effects */
+        .games-intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .games-intro h2 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 0 var(--accent);
+            letter-spacing: 1px;
+        }
+
+        .games-intro p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 500;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+            width: 100%;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 3px solid transparent;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border-color: var(--accent);
+        }
+
+        .game-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            transition: var(--transition);
+            color: var(--primary);
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .game-card:hover .game-icon {
+            transform: scale(1.2) rotate(10deg);
+            color: var(--secondary);
+        }
+
+        .game-card h3 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--text);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            transition: var(--transition);
+        }
+
+        .game-card:hover h3 {
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .game-card p {
+            color: var(--text-light);
+            transition: var(--transition);
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .btn-explore {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            display: inline-block;
+            font-family: 'Fredoka One', cursive;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .btn-explore:hover {
+            background-color: var(--secondary);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-explore:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Floating characters animation */
+        .floating-characters {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .character {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            animation: float-up 15s linear infinite;
+            color: var(--primary);
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
+
+        /* Footer with fun pattern */
+        footer {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 80px;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L0,20 C25,10 75,10 100,20 L100,0 Z' fill='%23F7FFF7'/%3E%3C/svg%3E");
+            background-size: 100% 100%;
+        }
+
+        footer p {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-section p {
+                font-size: 1.2rem;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .slider-item {
+                min-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <div class="floating-characters" id="floatingChars"></div>
+    
+    <header id="mainHeader">
+        <div class="container">
+            <div class="logo">
+                <img src="https://img.icons8.com/color/96/000000/controller.png" alt="GameOn Logo">
+                <span>GameOn</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="home.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="scoreboard.html"><i class="fas fa-trophy"></i> My Scores</a></li>
+                    <li><a href="leaderboard.html"><i class="fas fa-medal"></i> Leaderboard</a></li>
+                    <li><a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero-section">
+            <h1>Welcome to GameOn!</h1>
+            <p>Where fun never ends! Choose your favorite game and let the adventure begin!</p>
+            <button class="btn-explore" onclick="document.querySelector('.games-intro').scrollIntoView({ behavior: 'smooth' })">
+                <i class="fas fa-gamepad"></i> EXPLORE GAMES
+            </button>
+        </section>
+
+        <!-- Game Slider Section -->
+        <section class="game-slider">
+            <div class="slider-container" id="slider">
+                <div class="slider-item">
+                    <div class="slider-image" style="background-image: url('https://img.poki-cdn.com/cdn-cgi/image/quality=78,width=204,height=204,fit=cover,f=auto/e466baf845544ef47e0dfbd60f127071.png');"></div>
+                    <div class="slider-content">
+                        <h3>Snake Adventure</h3>
+                        <p>Slither and eat to grow bigger!</p>
+                        <button class="btn-explore" onclick="window.location.href='games/snake.html'">Play Now</button>
+                    </div>
+                </div>
+                <div class="slider-item">
+                    <div class="slider-image" style="background-image: url('https://images.unsplash.com/photo-1597645587822-e99fa5d45d25?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80');"></div>
+                    <div class="slider-content">
+                        <h3>Memory Challenge</h3>
+                        <p>Find all matching pairs!</p>
+                        <button class="btn-explore" onclick="window.location.href='games/memory.html'">Play Now</button>
+                    </div>
+                </div>
+                <div class="slider-item">
+                    <div class="slider-image" style="background-image: url('https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80');"></div>
+                    <div class="slider-content">
+                        <h3>Word Wizard</h3>
+                        <p>Guess the hidden word!</p>
+                        <button class="btn-explore" onclick="window.location.href='games/wordguess.html'">Play Now</button>
+                    </div>
+                </div>
+                <div class="slider-item">
+                    <div class="slider-image" style="background-image: url('https://play-lh.googleusercontent.com/zPxLgj5nvl20ahJV7aFC6S5mD8kii5CEEDj25j1P9CYAfXL9sdDuO-8eES0r4DhJHrU');"></div>
+                    <div class="slider-content">
+                        <h3>Tic Tac Toe</h3>
+                        <p>Classic X and O battle!</p>
+                        <button class="btn-explore" onclick="window.location.href='games/tictactoe.html'">Play Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-nav">
+                <button class="slider-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+                <button class="slider-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </section>
+
+        <section class="games-intro">
+            <h2>Our Awesome Games Collection</h2>
+            <p>Select from our variety of exciting games to test your skills and compete with friends</p>
+        </section>
+
+        <section class="games-grid">
+            <div class="game-card" onclick="window.location.href='games/snake.html'">
+                <div class="game-icon">
+                    <img src="https://img.icons8.com/color/96/000000/snake.png" alt="Snake Game" style="width: 80px;">
+                </div>
+                <h3>Snake Adventure</h3>
+                <p>Classic snake and apple game</p>
+                <button class="btn-explore">Play Now</button>
+            </div>
+
+            <div class="game-card" onclick="window.location.href='games/memory.html'">
+                <div class="game-icon">
+                    <img src="https://img.icons8.com/color/96/000000/brain.png" alt="Memory Game" style="width: 80px;">
+                </div>
+                <h3>Memory Challenge</h3>
+                <p>Test your memory with this card game</p>
+                <button class="btn-explore">Play Now</button>
+            </div>
+
+            <div class="game-card" onclick="window.location.href='games/wordguess.html'">
+                <div class="game-icon">
+                    <img src="https://img.icons8.com/color/96/000000/word.png" alt="Word Guess" style="width: 80px;">
+                </div>
+                <h3>Word Wizard</h3>
+                <p>Guess the hidden word letter by letter</p>
+                <button class="btn-explore">Play Now</button>
+            </div>
+
+            <div class="game-card" onclick="window.location.href='games/numberguess.html'">
+                <div class="game-icon">
+                    <img src="https://img.icons8.com/color/96/000000/number-pad.png" alt="Number Guess" style="width: 80px;">
+                </div>
+                <h3>Number Ninja</h3>
+                <p>Find the secret number in fewest tries</p>
+                <button class="btn-explore">Play Now</button>
+            </div>
+
+            <div class="game-card" onclick="window.location.href='games/tictactoe.html'">
+                <div class="game-icon">
+                    <img src="https://img.icons8.com/ios/100/tic-tac-toe--v1.png" alt="Tic Tac Toe" style="width: 80px;">
+                </div>
+                <h3>Tic Tac Toe</h3>
+                <p>Classic X and O game against AI</p>
+                <button class="btn-explore">Play Now</button>
+            </div>
+
+            <div class="game-card" onclick="window.location.href='games/puzzle.html'">
+                <div class="game-icon">
+                    <img src="https://img.icons8.com/color/96/000000/jigsaw.png" alt="Puzzle" style="width: 80px;">
+                </div>
+                <h3>Puzzle Master</h3>
+                <p>Slide to solve the puzzle</p>
+                <button class="btn-explore">Play Now</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 GameOn. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 15;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 15 + 5;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 10 + 10;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Create floating characters
+        function createFloatingChars() {
+            const container = document.getElementById('floatingChars');
+            const chars = ['🎮', '👾', '🕹️', '🎲', '🧩', '🎯', '🏆', '🌟', '🌈', '✨'];
+            const count = 20;
+            
+            for (let i = 0; i < count; i++) {
+                const char = document.createElement('div');
+                char.classList.add('character');
+                char.textContent = chars[Math.floor(Math.random() * chars.length)];
+                
+                // Random properties
+                const size = Math.random() * 2 + 1;
+                const posX = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 10 + 10;
+                
+                char.style.fontSize = `${size}rem`;
+                char.style.left = `${posX}%`;
+                char.style.animationDelay = `${delay}s`;
+                char.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(char);
+            }
+        }
+        
+        // Slider functionality
+        function initSlider() {
+            const slider = document.getElementById('slider');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const items = document.querySelectorAll('.slider-item');
+            let currentIndex = 0;
+            const itemWidth = items[0].offsetWidth + 30; // width + margin
+            
+            function updateSlider() {
+                slider.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+            }
+            
+            nextBtn.addEventListener('click', () => {
+                if (currentIndex < items.length - 1) {
+                    currentIndex++;
+                } else {
+                    currentIndex = 0;
+                }
+                updateSlider();
+            });
+            
+            prevBtn.addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                } else {
+                    currentIndex = items.length - 1;
+                }
+                updateSlider();
+            });
+            
+            // Auto slide
+            setInterval(() => {
+                if (currentIndex < items.length - 1) {
+                    currentIndex++;
+                } else {
+                    currentIndex = 0;
+                }
+                updateSlider();
+            }, 5000);
+        }
+        
+        // Initialize particles and characters
+        createParticles();
+        createFloatingChars();
+        
+        // Initialize slider
+        window.addEventListener('load', initSlider);
+        
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Check if user is logged in
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Logout functionality
+        document.getElementById('logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            auth.signOut().then(() => {
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>

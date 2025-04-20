@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameOn - Leaderboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="https://img.icons8.com/color/48/000000/controller.png">
+    <style>
+        :root {
+            --primary: #FF6B6B; /* Vibrant coral */
+            --secondary: #4ECDC4; /* Bright teal */
+            --accent: #FFE66D; /* Sunny yellow */
+            --dark: #292F36; /* Dark slate */
+            --light: #F7FFF7; /* Mint cream */
+            --text: #292F36;
+            --text-light: #6C757D;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        body {
+            background-color: var(--light);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Header with fun gradient */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 15px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+            transition: var(--transition);
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .logo span {
+            margin-left: 10px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        nav ul li a {
+            color: white;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 30px;
+            transition: var(--transition);
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        nav ul li a.active {
+            background-color: var(--accent);
+            color: var(--dark);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul li a i {
+            margin-right: 8px;
+        }
+
+        /* Hero section */
+        .welcome-section {
+            text-align: center;
+            padding: 60px 0 40px;
+            position: relative;
+        }
+
+        .welcome-section h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            text-shadow: 3px 3px 0 var(--accent);
+            letter-spacing: 1px;
+        }
+
+        .welcome-section p {
+            font-size: 1.5rem;
+            color: var(--text);
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 500;
+        }
+
+        /* Leaderboard tabs */
+        .leaderboard-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 40px 0 30px;
+            justify-content: center;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background-color: var(--light);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tab-btn:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Leaderboard table */
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 30px 0;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .leaderboard-table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .leaderboard-table tr:nth-child(even) {
+            background-color: rgba(78, 205, 196, 0.05);
+        }
+        
+        .leaderboard-table tr:hover {
+            background-color: rgba(255, 107, 107, 0.1);
+            transform: scale(1.01);
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+            font-size: 1.2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--primary);
+            font-size: 1.2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .medal {
+            font-size: 1.3rem;
+            margin-right: 8px;
+            filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.2));
+        }
+
+        .gold { color: gold; }
+        .silver { color: silver; }
+        .bronze { color: #cd7f32; }
+
+        /* Floating characters animation */
+        .floating-characters {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .character {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            animation: float-up 15s linear infinite;
+            color: var(--primary);
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
+
+        /* Footer with fun pattern */
+        footer {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 80px;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L0,20 C25,10 75,10 100,20 L100,0 Z' fill='%23F7FFF7'/%3E%3C/svg%3E");
+            background-size: 100% 100%;
+        }
+
+        footer p {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .welcome-section h1 {
+                font-size: 2.5rem;
+            }
+            
+            .welcome-section p {
+                font-size: 1.2rem;
+            }
+            
+            .leaderboard-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .leaderboard-table {
+                font-size: 0.9rem;
+            }
+            
+            .leaderboard-table th, 
+            .leaderboard-table td {
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <div class="floating-characters" id="floatingChars"></div>
+    
+    <header id="mainHeader">
+        <div class="container">
+            <div class="logo">
+                <img src="https://img.icons8.com/color/96/000000/controller.png" alt="GameOn Logo">
+                <span>GameOn</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="home.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="scoreboard.html"><i class="fas fa-trophy"></i> My Scores</a></li>
+                    <li><a href="leaderboard.html" class="active"><i class="fas fa-medal"></i> Leaderboard</a></li>
+                    <li><a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="welcome-section">
+            <h1>GameOn Leaderboard</h1>
+            <p>Top players across all games - Can you make it to the top?</p>
+        </section>
+
+        <section class="leaderboard-section">
+            <div class="leaderboard-tabs">
+                <button class="tab-btn active" data-game="Snake"><i class="fas fa-snake"></i> Snake</button>
+                <button class="tab-btn" data-game="Memory"><i class="fas fa-brain"></i> Memory</button>
+                <button class="tab-btn" data-game="Word Guess"><i class="fas fa-font"></i> Word Guess</button>
+                <button class="tab-btn" data-game="Number Guess"><i class="fas fa-dice"></i> Number Guess</button>
+                <button class="tab-btn" data-game="Tic Tac Toe"><i class="fas fa-times"></i> Tic Tac Toe</button>
+                <button class="tab-btn" data-game="Puzzle"><i class="fas fa-puzzle-piece"></i> Puzzle</button>
+            </div>
+
+            <div id="loading" class="loading">
+                <i class="fas fa-spinner fa-spin fa-2x"></i><br>
+                Loading leaderboard...
+            </div>
+            <div id="noData" class="no-data" style="display: none;">
+                <i class="fas fa-gamepad fa-2x"></i><br>
+                No leaderboard data available for this game yet.
+            </div>
+            <table class="leaderboard-table" id="leaderboardTable">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Score</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                    <!-- Leaderboard will be loaded here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 GameOn. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 15;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 15 + 5;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 10 + 10;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Create floating characters
+        function createFloatingChars() {
+            const container = document.getElementById('floatingChars');
+            const chars = ['🎮', '👾', '🕹️', '🎲', '🧩', '🎯', '🏆', '🌟', '🌈', '✨'];
+            const count = 20;
+            
+            for (let i = 0; i < count; i++) {
+                const char = document.createElement('div');
+                char.classList.add('character');
+                char.textContent = chars[Math.floor(Math.random() * chars.length)];
+                
+                // Random properties
+                const size = Math.random() * 2 + 1;
+                const posX = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 10 + 10;
+                
+                char.style.fontSize = `${size}rem`;
+                char.style.left = `${posX}%`;
+                char.style.animationDelay = `${delay}s`;
+                char.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(char);
+            }
+        }
+        
+        // Initialize particles and characters
+        createParticles();
+        createFloatingChars();
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Check if user is logged in
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                // Load Snake leaderboard by default
+                showLeaderboard('Snake');
+            }
+        });
+
+        // Logout functionality
+        document.getElementById('logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            auth.signOut().then(() => {
+                window.location.href = 'index.html';
+            });
+        });
+
+        // Tab click handler
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Update active tab
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Load leaderboard for selected game
+                const game = this.dataset.game;
+                showLeaderboard(game);
+            });
+        });
+
+        // Format date
+        function formatDate(timestamp) {
+            if (!timestamp) return 'N/A';
+            const date = timestamp.toDate();
+            return date.toLocaleDateString();
+        }
+
+    // Show leaderboard for a specific game
+async function showLeaderboard(gameName) {
+    const leaderboardBody = document.getElementById('leaderboardBody');
+    const loadingDiv = document.getElementById('loading');
+    const noDataDiv = document.getElementById('noData');
+    const table = document.getElementById('leaderboardTable');
+    
+    // Clear previous data
+    leaderboardBody.innerHTML = '';
+    loadingDiv.style.display = 'block';
+    noDataDiv.style.display = 'none';
+    table.style.display = 'none';
+
+    try {
+        // Different query based on game type
+        let query;
+        if (['Word Guess', 'Number Guess'].includes(gameName)) {
+            // For these games, lower score is better
+            query = db.collection('scores')
+                .where('gameName', '==', gameName)
+                .orderBy('score', 'asc')
+                .limit(100);
+        } else if (gameName === 'Tic Tac Toe') {
+            // For Tic Tac Toe, we'll show win percentage
+            query = db.collection('scores')
+                .where('gameName', '==', gameName)
+                .limit(100);
+        } else {
+            // For other games, higher score is better
+            query = db.collection('scores')
+                .where('gameName', '==', gameName)
+                .orderBy('score', 'desc')
+                .limit(100);
+        }
+
+        const querySnapshot = await query.get();
+
+        // Process results
+        const userStats = new Map();
+        
+        querySnapshot.forEach(doc => {
+            const data = doc.data();
+            const userId = data.userId;
+            
+            if (!userStats.has(userId)) {
+                userStats.set(userId, {
+                    userId: userId,
+                    scores: [],
+                    wins: 0,
+                    losses: 0,
+                    draws: 0
+                });
+            }
+            
+            const userData = userStats.get(userId);
+            userData.scores.push(data.score || 0);
+            
+            // For Tic Tac Toe, track wins/losses/draws
+            if (gameName === 'Tic Tac Toe') {
+                if (data.result === 'win') userData.wins++;
+                else if (data.result === 'loss') userData.losses++;
+                else if (data.result === 'draw') userData.draws++;
+            }
+        });
+
+        // Calculate leaderboard data
+        let leaderboardData = [];
+        
+        if (gameName === 'Tic Tac Toe') {
+            // For Tic Tac Toe, calculate win percentage
+            userStats.forEach(userData => {
+                const totalGames = userData.wins + userData.losses + userData.draws;
+                const winPercentage = totalGames > 0 ? 
+                    Math.round((userData.wins / totalGames) * 100) : 0;
+                leaderboardData.push({
+                    userId: userData.userId,
+                    score: winPercentage,
+                    wins: userData.wins,
+                    losses: userData.losses,
+                    draws: userData.draws
+                });
+            });
+            
+            // Sort by win percentage (descending)
+            leaderboardData.sort((a, b) => b.score - a.score);
+        } else {
+            // For other games, use average score
+            userStats.forEach(userData => {
+                const avgScore = userData.scores.length > 0 ?
+                    Math.round(userData.scores.reduce((a, b) => a + b, 0) / userData.scores.length) : 0;
+                leaderboardData.push({
+                    userId: userData.userId,
+                    score: avgScore
+                });
+            });
+            
+            // Sort by score (direction depends on game)
+            if (['Word Guess', 'Number Guess'].includes(gameName)) {
+                leaderboardData.sort((a, b) => a.score - b.score);
+            } else {
+                leaderboardData.sort((a, b) => b.score - a.score);
+            }
+        }
+
+        // Take top 10
+        leaderboardData = leaderboardData.slice(0, 10);
+
+        if (leaderboardData.length === 0) {
+            noDataDiv.textContent = `No ${gameName} scores yet. Be the first!`;
+            noDataDiv.style.display = 'block';
+            return;
+        }
+
+        // Get user data in batch - changed from 'username' to 'name'
+        const userIds = leaderboardData.map(item => item.userId);
+        const userDocs = await db.collection('users')
+            .where(firebase.firestore.FieldPath.documentId(), 'in', userIds)
+            .get();
+
+        const userMap = new Map();
+        userDocs.forEach(doc => {
+            // Changed from doc.data().username to doc.data().name
+            userMap.set(doc.id, doc.data().name || `Player ${doc.id.substring(0, 6)}`);
+        });
+
+        // Display leaderboard
+        leaderboardData.forEach((data, index) => {
+            const playerName = userMap.get(data.userId) || `Player ${data.userId.substring(0, 6)}`;
+            
+            const row = document.createElement('tr');
+            const medal = index === 0 ? '<i class="fas fa-trophy gold medal"></i>' : 
+                          index === 1 ? '<i class="fas fa-medal silver medal"></i>' : 
+                          index === 2 ? '<i class="fas fa-medal bronze medal"></i>' : '';
+            
+            let scoreDisplay = data.score;
+            if (gameName === 'Tic Tac Toe') {
+                scoreDisplay = `${data.score}% (${data.wins}W ${data.losses}L ${data.draws}D)`;
+            } else if (['Word Guess', 'Number Guess'].includes(gameName)) {
+                scoreDisplay = data.score;
+            }
+            
+            row.innerHTML = `
+                <td>${medal} ${index + 1}</td>
+                <td>${playerName}</td>
+                <td>${scoreDisplay}</td>
+                <td>N/A</td>
+            `;
+            leaderboardBody.appendChild(row);
+        });
+
+        table.style.display = 'table';
+
+    } catch (error) {
+        console.error("Error loading leaderboard:", error);
+        noDataDiv.innerHTML = `
+            <i class="fas fa-exclamation-triangle"></i><br>
+            <p>Error loading ${gameName} leaderboard:</p>
+            <p>${error.message}</p>
+        `;
+        noDataDiv.style.display = 'block';
+    } finally {
+        loadingDiv.style.display = 'none';
+    }
+}
+    </script>
+</body>
+</html>

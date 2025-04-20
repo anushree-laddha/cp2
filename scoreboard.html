@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameOn - My Scores</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="https://img.icons8.com/color/48/000000/controller.png">
+    <style>
+        :root {
+            --primary: #FF6B6B; /* Vibrant coral */
+            --secondary: #4ECDC4; /* Bright teal */
+            --accent: #FFE66D; /* Sunny yellow */
+            --dark: #292F36; /* Dark slate */
+            --light: #F7FFF7; /* Mint cream */
+            --text: #292F36;
+            --text-light: #6C757D;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        body {
+            background-color: var(--light);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Header with fun gradient */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 15px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+            transition: var(--transition);
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .logo span {
+            margin-left: 10px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        nav ul li a {
+            color: white;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 30px;
+            transition: var(--transition);
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        nav ul li a.active {
+            background-color: var(--accent);
+            color: var(--dark);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul li a i {
+            margin-right: 8px;
+        }
+
+        /* Welcome section */
+        .welcome-section {
+            text-align: center;
+            padding: 60px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 107, 107, 0.1) 0%, rgba(78, 205, 196, 0) 70%);
+            z-index: -1;
+        }
+
+        .welcome-section::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 230, 109, 0.1) 0%, rgba(255, 230, 109, 0) 70%);
+            z-index: -1;
+        }
+
+        .welcome-section h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 0 var(--accent);
+            letter-spacing: 1px;
+        }
+
+        .welcome-section p {
+            color: var(--text);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 500;
+        }
+
+        /* Scores section */
+        .scores-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 3px solid var(--accent);
+        }
+
+        .scores-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .scores-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .scores-table th, .scores-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .scores-table th {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .scores-table tr:hover {
+            background-color: rgba(255, 107, 107, 0.05);
+        }
+
+        .scores-table tr:nth-child(even) {
+            background-color: rgba(78, 205, 196, 0.05);
+        }
+
+        .scores-table tr:hover:nth-child(even) {
+            background-color: rgba(78, 205, 196, 0.1);
+        }
+
+        .scores-table td i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .no-scores {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            background-color: rgba(255, 230, 109, 0.2);
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .no-scores i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .loading i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Floating characters animation */
+        .floating-characters {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .character {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            animation: float-up 15s linear infinite;
+            color: var(--primary);
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
+
+        /* Footer with fun pattern */
+        footer {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 80px;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L0,20 C25,10 75,10 100,20 L100,0 Z' fill='%23F7FFF7'/%3E%3C/svg%3E");
+            background-size: 100% 100%;
+        }
+
+        footer p {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .welcome-section h1 {
+                font-size: 2.2rem;
+            }
+            
+            .scores-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .scores-table th, .scores-table td {
+                padding: 12px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <div class="floating-characters" id="floatingChars"></div>
+    
+    <header id="mainHeader">
+        <div class="container">
+            <div class="logo">
+                <img src="https://img.icons8.com/color/96/000000/controller.png" alt="GameOn Logo">
+                <span>GameOn</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="home.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="scoreboard.html" class="active"><i class="fas fa-trophy"></i> My Scores</a></li>
+                    <li><a href="leaderboard.html"><i class="fas fa-medal"></i> Leaderboard</a></li>
+                    <li><a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="welcome-section">
+            <h1>My Game Scores</h1>
+            <p>Your personal gaming achievements and trophies</p>
+        </section>
+
+        <section class="scores-section">
+            <div id="loading" class="loading">
+                <i class="fas fa-trophy"></i>
+                Loading your scores...
+            </div>
+            <table class="scores-table" id="scoresTable">
+                <thead>
+                    <tr>
+                        <th>Game</th>
+                        <th>Score</th>
+                        <th>Date</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody id="scoresBody">
+                    <!-- Scores will be loaded here -->
+                </tbody>
+            </table>
+            <div id="noScores" class="no-scores" style="display: none;">
+                <i class="fas fa-gamepad"></i>
+                <h3>No scores yet!</h3>
+                <p>Play some games to see your scores here!</p>
+                <a href="home.html" class="btn-explore" style="margin-top: 15px; display: inline-block;">
+                    <i class="fas fa-gamepad"></i> PLAY GAMES
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 GameOn. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 15;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 15 + 5;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 10 + 10;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Create floating characters
+        function createFloatingChars() {
+            const container = document.getElementById('floatingChars');
+            const chars = ['🏆', '🎖️', '🏅', '🥇', '🥈', '🥉', '🌟', '✨', '🎯', '🎮'];
+            const count = 20;
+            
+            for (let i = 0; i < count; i++) {
+                const char = document.createElement('div');
+                char.classList.add('character');
+                char.textContent = chars[Math.floor(Math.random() * chars.length)];
+                
+                // Random properties
+                const size = Math.random() * 2 + 1;
+                const posX = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 10 + 10;
+                
+                char.style.fontSize = `${size}rem`;
+                char.style.left = `${posX}%`;
+                char.style.animationDelay = `${delay}s`;
+                char.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(char);
+            }
+        }
+        
+        // Initialize particles and characters
+        createParticles();
+        createFloatingChars();
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Check if user is logged in
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                loadUserScores(user.uid);
+            }
+        });
+
+        // Logout functionality
+        document.getElementById('logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            auth.signOut().then(() => {
+                window.location.href = 'index.html';
+            });
+        });
+
+        // Format date
+        function formatDate(timestamp) {
+            if (!timestamp) return 'N/A';
+            const date = timestamp.toDate();
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+
+        function getScoreDetails(data) {
+            if (!data || !data.gameName) return '';
+            
+            const gameName = data.gameName;
+            const score = data.score || 0;
+            
+            switch(gameName) {
+                case 'Snake':
+                    return `Length: ${score}`;
+                case 'Memory':
+                    return `Moves: ${data.moves || 'N/A'}, Time: ${data.time || 'N/A'}s`;
+                case 'Word Guess':
+                    return data.word ? `Word: ${data.word}, ${data.won ? 'Won' : 'Lost'}` : 
+                           data.won ? 'Won' : 'Lost';
+                case 'Number Guess':
+                    return `Number: ${data.number || 'N/A'}, Guesses: ${data.guesses || 'N/A'}`;
+                case 'Tic Tac Toe':
+                    return data.result === 'win' ? 'Won' : 
+                           data.result === 'loss' ? 'Lost' : 'Draw';
+                case 'Puzzle':
+                    return `Moves: ${data.moves || 'N/A'}, Time: ${data.time || 'N/A'}s`;
+                default:
+                    return '';
+            }
+        }
+
+        async function loadUserScores(userId) {
+            const scoresBody = document.getElementById('scoresBody');
+            const loadingDiv = document.getElementById('loading');
+            const noScoresDiv = document.getElementById('noScores');
+            const scoresTable = document.getElementById('scoresTable');
+            
+            // Clear previous data
+            scoresBody.innerHTML = '';
+            loadingDiv.style.display = 'block';
+            noScoresDiv.style.display = 'none';
+            scoresTable.style.display = 'none';
+
+            try {
+                const querySnapshot = await db.collection('scores')
+                    .where('userId', '==', userId)
+                    .orderBy('timestamp', 'desc')
+                    .limit(50)
+                    .get();
+
+                // Use Set to filter duplicates
+                const uniqueScores = new Map();
+                
+                querySnapshot.forEach(doc => {
+                    const data = doc.data();
+                    const key = `${data.gameName}-${data.score}-${data.timestamp?.seconds || 0}`;
+                    if (!uniqueScores.has(key)) {
+                        uniqueScores.set(key, data);
+                    }
+                });
+
+                if (uniqueScores.size === 0) {
+                    noScoresDiv.style.display = 'block';
+                    return;
+                }
+
+                // Display scores
+                scoresTable.style.display = 'table';
+                uniqueScores.forEach(data => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><i class="fas fa-gamepad"></i> ${data.gameName || 'Unknown Game'}</td>
+                        <td>${data.score !== undefined ? data.score : 
+                            data.result === 'win' ? 'Win' : 
+                            data.result === 'loss' ? 'Loss' : 
+                            data.result === 'draw' ? 'Draw' : '-'}</td>
+                        <td>${data.timestamp?.toDate?.().toLocaleString() || 'N/A'}</td>
+                        <td>${getScoreDetails(data)}</td>
+                    `;
+                    scoresBody.appendChild(row);
+                });
+
+            } catch (error) {
+                console.error("Error loading scores:", error);
+                noScoresDiv.innerHTML = `
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Oops! Something went wrong</h3>
+                    <p>We couldn't load your scores</p>
+                    <p><small>${error.message}</small></p>
+                `;
+                noScoresDiv.style.display = 'block';
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

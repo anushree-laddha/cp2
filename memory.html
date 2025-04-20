@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameOn - Memory</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="https://img.icons8.com/color/48/000000/controller.png">
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --dark: #292F36;
+            --light: #F7FFF7;
+            --text: #292F36;
+            --text-light: #6C757D;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --correct: #27ae60;
+            --wrong: #e74c3c;
+        }
+
+        body {
+            background-color: var(--light);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 15px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+            transition: var(--transition);
+        }
+
+        .logo span {
+            margin-left: 10px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 800px;
+            margin: 40px auto;
+            text-align: center;
+            border-top: 8px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(78, 205, 196, 0.05) 100%);
+            z-index: -1;
+        }
+
+        .game-header h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0 var(--accent);
+        }
+
+        .game-header p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .game-info-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .game-info-label {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .game-info-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .memory-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 30px auto;
+            max-width: 500px;
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background-color: var(--primary);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 0 var(--dark);
+            color: transparent;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .memory-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 15px;
+            backface-visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .memory-card.flipped {
+            color: var(--dark);
+            background-color: var(--accent);
+            transform: rotateY(180deg);
+            box-shadow: 0 4px 0 #cc9e00;
+        }
+
+        .memory-card.flipped::before {
+            transform: rotateY(180deg);
+            opacity: 0;
+        }
+
+        .memory-card.matched {
+            background-color: var(--secondary);
+            box-shadow: 0 4px 0 #2a9d8f;
+            transform: scale(0.95);
+            cursor: default;
+        }
+
+        .memory-card:hover:not(.flipped):not(.matched) {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 0 var(--dark);
+        }
+
+        .memory-card:active:not(.flipped):not(.matched) {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--dark);
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 0 var(--dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .btn i {
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 0 var(--dark);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--dark);
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 60px;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L0,20 C25,10 75,10 100,20 L100,0 Z' fill='%23F7FFF7'/%3E%3C/svg%3E");
+            background-size: 100% 100%;
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 25px;
+            }
+            
+            .game-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .memory-board {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+            }
+            
+            .memory-card {
+                font-size: 1.8rem;
+            }
+            
+            .game-controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <header id="mainHeader">
+        <div class="container">
+            <div class="logo">
+                <img src="https://img.icons8.com/color/96/000000/controller.png" alt="GameOn Logo">
+                <span>GameOn</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../home.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="../scoreboard.html"><i class="fas fa-trophy"></i> My Scores</a></li>
+                    <li><a href="../leaderboard.html"><i class="fas fa-medal"></i> Leaderboard</a></li>
+                    <li><a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="game-container">
+            <div class="game-header">
+                <h1><i class="fas fa-brain"></i> Memory Challenge</h1>
+                <p>Find all matching pairs in the shortest time with the fewest moves!</p>
+            </div>
+
+            <div class="game-info">
+                <div class="game-info-item">
+                    <div class="game-info-label">Moves</div>
+                    <div class="game-info-value" id="moves">0</div>
+                </div>
+                <div class="game-info-item">
+                    <div class="game-info-label">Pairs Found</div>
+                    <div class="game-info-value" id="pairs">0/8</div>
+                </div>
+                <div class="game-info-item">
+                    <div class="game-info-label">Time</div>
+                    <div class="game-info-value" id="timer">0s</div>
+                </div>
+            </div>
+            
+            <div class="memory-board" id="gameBoard"></div>
+            
+            <div class="game-controls">
+                <button class="btn" id="restartBtn"><i class="fas fa-redo"></i> Restart</button>
+                <button class="btn" id="homeBtn"><i class="fas fa-home"></i> Home</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 GameOn. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 15;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 15 + 5;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 10 + 10;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        createParticles();
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Check if user is logged in
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = '../index.html';
+            } else {
+                userId = user.uid;
+                initGame();
+            }
+        });
+
+        // Logout functionality
+        document.getElementById('logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            auth.signOut().then(() => {
+                window.location.href = '../index.html';
+            });
+        });
+
+        // Back to home
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            window.location.href = '../home.html';
+        });
+
+        // Game variables
+        const gameBoard = document.getElementById('gameBoard');
+        const movesDisplay = document.getElementById('moves');
+        const pairsDisplay = document.getElementById('pairs');
+        const timerDisplay = document.getElementById('timer');
+        const restartBtn = document.getElementById('restartBtn');
+        
+        let userId = '';
+        let cards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let moves = 0;
+        let timer = 0;
+        let timerInterval;
+        let canFlip = true;
+        
+        // Emoji icons for cards
+        const emojis = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
+        
+        // Initialize game
+        function initGame() {
+            // Reset game state
+            gameBoard.innerHTML = '';
+            flippedCards = [];
+            matchedPairs = 0;
+            moves = 0;
+            timer = 0;
+            canFlip = true;
+            
+            // Update displays
+            movesDisplay.textContent = moves;
+            pairsDisplay.textContent = `${matchedPairs}/8`;
+            timerDisplay.textContent = timer;
+            
+            // Clear timer if running
+            if (timerInterval) clearInterval(timerInterval);
+            
+            // Create card pairs
+            let cardValues = [...emojis, ...emojis];
+            
+            // Shuffle cards
+            cardValues = shuffleArray(cardValues);
+            
+            // Create card elements
+            cards = cardValues.map((value, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.dataset.value = value;
+                card.dataset.index = index;
+                card.addEventListener('click', flipCard);
+                gameBoard.appendChild(card);
+                return {
+                    element: card,
+                    value: value,
+                    flipped: false,
+                    matched: false
+                };
+            });
+            
+            // Start timer
+            timerInterval = setInterval(() => {
+                timer++;
+                timerDisplay.textContent = timer;
+            }, 1000);
+        }
+
+        // Shuffle array using Fisher-Yates algorithm
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Flip card when clicked
+        function flipCard() {
+            if (!canFlip) return;
+            
+            const index = this.dataset.index;
+            const card = cards[index];
+            
+            // Don't allow flipping already flipped or matched cards
+            if (card.flipped || card.matched) return;
+            
+            // Flip the card
+            card.flipped = true;
+            card.element.textContent = card.value;
+            card.element.classList.add('flipped');
+            
+            // Add to flipped cards
+            flippedCards.push(card);
+            
+            // Check for match if two cards are flipped
+            if (flippedCards.length === 2) {
+                canFlip = false;
+                moves++;
+                movesDisplay.textContent = moves;
+                
+                if (flippedCards[0].value === flippedCards[1].value) {
+                    // Match found
+                    flippedCards[0].matched = true;
+                    flippedCards[1].matched = true;
+                    flippedCards[0].element.classList.add('matched');
+                    flippedCards[1].element.classList.add('matched');
+                    
+                    matchedPairs++;
+                    pairsDisplay.textContent = `${matchedPairs}/8`;
+                    
+                    flippedCards = [];
+                    canFlip = true;
+                    
+                    // Check if game is complete
+                    if (matchedPairs === 8) {
+                        gameComplete();
+                    }
+                } else {
+                    // No match, flip back after delay
+                    setTimeout(() => {
+                        flippedCards[0].flipped = false;
+                        flippedCards[1].flipped = false;
+                        flippedCards[0].element.textContent = '';
+                        flippedCards[1].element.textContent = '';
+                        flippedCards[0].element.classList.remove('flipped');
+                        flippedCards[1].element.classList.remove('flipped');
+                        flippedCards = [];
+                        canFlip = true;
+                    }, 1000);
+                }
+            }
+        }
+
+        // Game complete function
+        function gameComplete() {
+            clearInterval(timerInterval);
+            
+            // Calculate score (lower is better)
+            const score = Math.floor((moves * timer) / 2);
+            
+            // Show completion message
+            setTimeout(() => {
+                alert(`Congratulations! You completed the game in ${timer} seconds with ${moves} moves. Your score: ${score}`);
+                saveScore(score);
+            }, 500);
+        }
+
+        // Save score to Firestore
+        function saveScore(score) {
+            if (userId && score > 0) {
+                db.collection('scores').add({
+                    userId: userId,
+                    gameName: 'Memory',
+                    score: score,
+                    moves: moves,
+                    time: timer,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then(() => {
+                    console.log("Score saved successfully");
+                })
+                .catch((error) => {
+                    console.error("Error saving score: ", error);
+                });
+            }
+        }
+
+        // Restart game
+        restartBtn.addEventListener('click', initGame);
+
+        // Start the game
+        initGame();
+    </script>
+</body>
+</html>
